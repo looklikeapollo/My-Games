@@ -1,0 +1,603 @@
+# Полный HTML-файл для свадебной игры «100 к 1»
+
+Скопируй весь код ниже в файл `index.html` и просто открой его в браузере.
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 к 1 — Версия молодожёнов</title>
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4efe4;
+color:#222;
+}
+
+.container{
+max-width:1500px;
+margin:auto;
+padding:14px;
+}
+
+.top{
+display:grid;
+grid-template-columns:1fr 2fr 1fr;
+gap:14px;
+align-items:start;
+margin-bottom:14px;
+}
+
+.team{
+background:white;
+border-radius:20px;
+padding:16px;
+border:4px solid #ddd;
+box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+.team.active{
+border-color:#f28c18;
+}
+
+.team input{
+width:100%;
+font-size:28px;
+font-weight:900;
+text-align:center;
+border:none;
+outline:none;
+background:transparent;
+}
+
+.score{
+font-size:90px;
+font-weight:900;
+text-align:center;
+color:#f28c18;
+line-height:1;
+margin:12px 0;
+}
+
+.turnBtn{
+width:100%;
+border:none;
+background:#f28c18;
+color:white;
+font-size:24px;
+font-weight:bold;
+padding:14px;
+border-radius:16px;
+cursor:pointer;
+}
+
+.center{
+text-align:center;
+}
+
+.title{
+font-size:52px;
+font-weight:900;
+margin-top:10px;
+}
+
+.round{
+font-size:28px;
+font-weight:bold;
+color:#cc6b00;
+margin-top:10px;
+}
+
+.reverse{
+display:inline-block;
+background:#cf2f2f;
+color:white;
+padding:10px 18px;
+border-radius:30px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.question{
+background:white;
+border-radius:24px;
+padding:20px;
+font-size:38px;
+font-weight:900;
+text-align:center;
+margin-bottom:14px;
+box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+.answers{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:14px;
+}
+
+.answer{
+background:#222;
+color:#ffd27a;
+border-radius:18px;
+padding:18px;
+font-size:28px;
+font-weight:bold;
+min-height:84px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+cursor:pointer;
+transition:.2s;
+border:4px solid #444;
+}
+
+.answer:hover{
+transform:scale(1.01);
+}
+
+.answer.open{
+background:#f28c18;
+color:white;
+border-color:#b86200;
+}
+
+.answerIndex{
+font-size:34px;
+font-weight:900;
+width:44px;
+}
+
+.answerText{
+flex:1;
+padding:0 12px;
+}
+
+.answerPoints{
+font-size:42px;
+font-weight:900;
+color:#ffe28d;
+}
+
+.bottom{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:14px;
+}
+
+.panel{
+background:white;
+border-radius:20px;
+padding:18px;
+box-shadow:0 6px 16px rgba(0,0,0,.08);
+text-align:center;
+}
+
+.panel h2{
+margin-top:0;
+font-size:30px;
+}
+
+.crosses{
+font-size:82px;
+letter-spacing:10px;
+margin:10px 0 20px;
+}
+
+.cross{
+color:#f0b1b1;
+}
+
+.cross.active{
+color:#d11d1d;
+}
+
+.bigPoints{
+font-size:120px;
+font-weight:900;
+color:#f28c18;
+line-height:1;
+}
+
+.btn{
+width:100%;
+border:none;
+color:white;
+font-size:26px;
+font-weight:bold;
+padding:16px;
+border-radius:16px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.red{
+background:#d62828;
+}
+
+.orange{
+background:#f28c18;
+}
+
+.dark{
+background:#333;
+}
+
+@media(max-width:1100px){
+.top{
+grid-template-columns:1fr;
+}
+
+.answers{
+grid-template-columns:1fr;
+}
+
+.bottom{
+grid-template-columns:1fr;
+}
+
+.title{
+font-size:36px;
+}
+
+.question{
+font-size:28px;
+}
+
+.answer{
+font-size:22px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top">
+
+<div class="team active" id="team1Card">
+<input id="team1Name" value="Команда 1">
+<div class="score" id="score1">0</div>
+<button class="turnBtn" onclick="givePoints(1)">
+Переход хода
+</button>
+</div>
+
+<div class="center">
+<div class="title">100 к 1: Версия молодожёнов</div>
+<div class="round" id="roundTitle"></div>
+<div id="reverseWrap"></div>
+</div>
+
+<div class="team" id="team2Card">
+<input id="team2Name" value="Команда 2">
+<div class="score" id="score2">0</div>
+<button class="turnBtn" onclick="givePoints(2)">
+Переход хода
+</button>
+</div>
+
+</div>
+
+<div class="question" id="question"></div>
+
+<div class="answers" id="answers"></div>
+
+<div class="bottom">
+
+<div class="panel">
+<h2>Ошибки</h2>
+
+<div class="crosses">
+<span class="cross" id="cross1">✕</span>
+<span class="cross" id="cross2">✕</span>
+<span class="cross" id="cross3">✕</span>
+</div>
+
+<button class="btn red" onclick="mistake()">
+Проверить
+</button>
+</div>
+
+<div class="panel">
+<h2>Открыто очков</h2>
+<div class="bigPoints" id="points">0</div>
+</div>
+
+<div class="panel">
+<button class="btn orange" onclick="nextRound()">
+Следующий раунд
+</button>
+
+<button class="btn dark" onclick="resetRound()">
+Сбросить раунд
+</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+const rounds = [
+{
+title:'Раунд 1',
+question:'Что мужчины обычно делают одной рукой?',
+answers:[
+['Чешутся',2],
+['Гладят кошку',2],
+['Козырек, чтобы смотреть вдаль',2],
+['Чистят зубы',1],
+['Несут несколько предметов',1],
+['Ковыряют в носу',1]
+]
+},
+{
+title:'Раунд 2',
+question:'Что кладут в холодильник, а потом забывают на год?',
+answers:[
+['Капуста',2],
+['Соус',2],
+['Кисломолочка, купленная женой',2],
+['Замороженные ягоды',1],
+['Кабачок',1],
+['Остатки от роллов',1]
+]
+},
+{
+title:'Раунд 3',
+question:'Почему вымерли динозавры?',
+answers:[
+['Упал астероид',2],
+['Из-за климата',2],
+['Ной не взял на Ковчег',2],
+['Чтобы у нас была нефть',1],
+['Они не вымерли',1],
+['Было скучно жить без людей',1]
+]
+},
+{
+title:'Игра наоборот',
+reverse:true,
+question:'Что можно сделать за 5 минут до сна и через 5 минут после пробуждения?',
+answers:[
+['Смотреть рилсы',2],
+['Общаться с кошкой',2],
+['Чистить зубы',2],
+['Вязать',1],
+['Пописать',1],
+['Зевнуть',1]
+]
+},
+{
+title:'Финальный раунд',
+question:'Ингредиент, который легко подойдет к любому блюду',
+answers:[
+['Соль',2],
+['Укроп',2],
+['Сахар',2],
+['Майонез',1],
+['Чеснок / паприка',1],
+['Специи для карбонары',1]
+]
+}
+];
+
+let round = 0;
+let opened = [];
+let mistakesCount = 0;
+let activeTeam = 1;
+let score1 = 0;
+let score2 = 0;
+
+function tone(freq,duration,type='sine'){
+const ctx = new(window.AudioContext || window.webkitAudioContext)();
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+
+osc.type = type;
+osc.frequency.value = freq;
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+osc.start();
+
+gain.gain.setValueAtTime(0.25, ctx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration/1000);
+
+osc.stop(ctx.currentTime + duration/1000);
+}
+
+function revealSound(){
+tone(850,200,'triangle');
+}
+
+function wrongSound(){
+const ctx = new(window.AudioContext || window.webkitAudioContext)();
+
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+
+osc.type = 'sawtooth';
+osc.frequency.setValueAtTime(180, ctx.currentTime);
+osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.6);
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+osc.start();
+
+gain.gain.setValueAtTime(0.3, ctx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+
+osc.stop(ctx.currentTime + 0.6);
+}
+
+function nextSound(){
+tone(500,180,'square');
+}
+
+function render(){
+const data = rounds[round];
+
+question.innerText = data.question;
+roundTitle.innerText = data.title;
+
+reverseWrap.innerHTML = data.reverse
+? '<div class="reverse">Очки наоборот</div>'
+: '';
+
+answers.innerHTML = '';
+
+let total = 0;
+
+for(let i=0;i<data.answers.length;i++){
+
+const a = data.answers[i];
+
+if(opened.includes(i)){
+total += a[1];
+}
+
+answers.innerHTML += `
+<div class="answer ${opened.includes(i)?'open':''}" onclick="openAnswer(${i})">
+<div class="answerIndex">${i+1}</div>
+<div class="answerText">
+${opened.includes(i)?a[0]:'████████████'}
+</div>
+<div class="answerPoints">
+${opened.includes(i)?a[1]:''}
+</div>
+</div>
+`;
+}
+
+points.innerText = total;
+
+score1El();
+score2El();
+
+team1Card.classList.toggle('active',activeTeam===1);
+team2Card.classList.toggle('active',activeTeam===2);
+}
+
+function score1El(){
+document.getElementById('score1').innerText = score1;
+}
+
+function score2El(){
+document.getElementById('score2').innerText = score2;
+}
+
+function openAnswer(i){
+
+if(opened.includes(i)) return;
+
+opened.push(i);
+
+revealSound();
+
+render();
+}
+
+function mistake(){
+
+mistakesCount++;
+
+wrongSound();
+
+if(mistakesCount<=3){
+document.getElementById('cross'+mistakesCount).classList.add('active');
+}
+
+if(mistakesCount>=3){
+
+setTimeout(()=>{
+
+activeTeam = activeTeam===1 ? 2 : 1;
+
+mistakesCount = 0;
+
+for(let i=1;i<=3;i++){
+document.getElementById('cross'+i).classList.remove('active');
+}
+
+render();
+
+},700);
+}
+}
+
+function currentPoints(){
+const data = rounds[round];
+
+let total = 0;
+
+for(let i of opened){
+total += data.answers[i][1];
+}
+
+return total;
+}
+
+function givePoints(team){
+
+const pts = currentPoints();
+
+if(team===1){
+score1 += pts;
+activeTeam = 1;
+}else{
+score2 += pts;
+activeTeam = 2;
+}
+
+opened = [];
+mistakesCount = 0;
+
+for(let i=1;i<=3;i++){
+document.getElementById('cross'+i).classList.remove('active');
+}
+
+nextSound();
+
+render();
+}
+
+function resetRound(){
+opened = [];
+mistakesCount = 0;
+
+for(let i=1;i<=3;i++){
+document.getElementById('cross'+i).classList.remove('active');
+}
+
+render();
+}
+
+function nextRound(){
+
+if(round < rounds.length-1){
+round++;
+resetRound();
+nextSound();
+}
+}
+
+render();
+</script>
+
+</body>
+</html>
+```
