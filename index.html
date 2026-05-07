@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>100 к 1</title>
+<title>100 к 1 — Wedding Edition</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
@@ -14,6 +17,45 @@ font-family:Arial,sans-serif;
 background:#0d1330;
 color:white;
 overflow:hidden;
+}
+
+.startScreen{
+position:fixed;
+inset:0;
+background:radial-gradient(circle,#2746b5,#0d1330);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.startTitle{
+font-size:88px;
+font-weight:900;
+color:#ffd43c;
+text-align:center;
+line-height:1;
+text-shadow:0 0 25px rgba(255,212,60,.4);
+}
+
+.startSubtitle{
+font-size:38px;
+margin-top:12px;
+opacity:.9;
+}
+
+.startBtn{
+margin-top:40px;
+border:none;
+border-radius:20px;
+padding:22px 42px;
+font-size:32px;
+font-weight:900;
+cursor:pointer;
+background:linear-gradient(180deg,#ffb347,#ff7b00);
+color:white;
+box-shadow:0 8px 20px rgba(0,0,0,.4);
 }
 
 .wrapper{
@@ -151,39 +193,23 @@ border:3px solid rgba(255,255,255,.15);
 text-align:center;
 }
 
+.roundNumber{
+font-size:20px;
+opacity:.8;
+}
+
 .roundTitle{
-font-size:34px;
+font-size:32px;
 font-weight:900;
 color:#ffd43c;
+margin-top:4px;
 }
 
 .question{
-font-size:26px;
+font-size:24px;
 font-weight:900;
-margin-top:6px;
-line-height:1.1;
-}
-
-.mode{
 margin-top:8px;
-display:inline-block;
-padding:8px 14px;
-border-radius:20px;
-font-weight:900;
-font-size:22px;
-}
-
-.reverse{
-background:#d62828;
-}
-
-.double{
-background:#ff8800;
-}
-
-.final{
-background:#ffd43c;
-color:#111;
+line-height:1.1;
 }
 
 .answers{
@@ -204,7 +230,6 @@ align-items:center;
 padding:0 14px;
 cursor:pointer;
 transition:.2s;
-min-height:0;
 }
 
 .answer.locked{
@@ -224,7 +249,7 @@ text-align:center;
 }
 
 .answerText{
-font-size:22px;
+font-size:20px;
 font-weight:900;
 padding:0 8px;
 line-height:1.05;
@@ -295,15 +320,26 @@ margin-top:12px;
 color:#ffd43c;
 }
 
-@media(max-width:1200px){
-body{overflow:auto}
-.wrapper{height:auto}
-.board{grid-template-columns:1fr}
-}
 </style>
 </head>
 
 <body>
+
+<div class="startScreen" id="startScreen">
+
+<div class="startTitle">
+100 к 1
+</div>
+
+<div class="startSubtitle">
+wedding edition
+</div>
+
+<button class="startBtn" onclick="startGame()">
+НАЧАТЬ ИГРУ
+</button>
+
+</div>
 
 <div class="wrapper">
 
@@ -331,11 +367,11 @@ body{overflow:auto}
 
 <div class="topInfo">
 
+<div class="roundNumber" id="roundNumber"></div>
+
 <div class="roundTitle" id="roundTitle"></div>
 
 <div class="question" id="question"></div>
-
-<div id="mode"></div>
 
 </div>
 
@@ -386,7 +422,7 @@ body{overflow:auto}
 const rounds = [
 
 {
-title:'Раунд 1',
+title:'',
 question:'Что мужчины обычно делают одной рукой?',
 multiplier:1,
 answers:[
@@ -400,39 +436,39 @@ answers:[
 },
 
 {
-title:'Раунд 2',
+title:'',
 question:'Что кладут в холодильник, а потом забывают на год?',
 multiplier:1,
 answers:[
-['Капуста',2],
+['Капусту',2],
 ['Соус',2],
-['Кисломолочка, купленная женой',2],
+['Кисломолочку, купленную женой',2],
 ['Замороженные ягоды',1],
 ['Кабачок',1],
-['Остатки от роллов',1]
+['Остатки от роллов: имбирь, соевый, васаби',1]
 ]
 },
 
 {
-title:'Раунд 3',
-question:'Что можно делать в последний момент за 5 минут до выхода?',
+title:'',
+question:'Что можно делать в последний момент за 5 минут до выхода из дома?',
 multiplier:1,
 answers:[
-['Пойти в туалет',2],
-['Искать что-то',2],
+['Пойти в туалет пописать',2],
+['Искать что-то (телефон, ключи, карточку и т.п.)',2],
 ['Гладить кошку',2],
-['Думать что надеть',1],
+['Все еще думать, что надеть, и опоздать',1],
 ['Надевать обувь',1],
-['Ждать выхода',1]
+['Поглядывать на часы и ждать выхода',1]
 ]
 },
 
 {
-title:'Раунд 4',
-question:'Самая зажатая мышца?',
+title:'',
+question:'Самая зажатая мышца в организме человека?',
 multiplier:1,
 answers:[
-['Шея',2],
+['Шея (шейно-воротниковая зона)',2],
 ['Мозг',2],
 ['Копчик',2],
 ['На лбу',1],
@@ -442,13 +478,13 @@ answers:[
 },
 
 {
-title:'Раунд 5',
-question:'Утро портится, если это закончилось',
+title:'',
+question:'Утро портится, если это в доме закончилось. Что это?',
 multiplier:1,
 answers:[
 ['Кофе',2],
 ['Молоко',2],
-['Вода',2],
+['Вся вода в трубах',2],
 ['Туалетная бумага',1],
 ['Деньги',1],
 ['Кошачий корм',1]
@@ -456,93 +492,93 @@ answers:[
 },
 
 {
-title:'ИГРА НАОБОРОТ',
+title:'Игра наоборот',
 question:'Почему вымерли динозавры?',
 reverse:true,
 multiplier:1,
 answers:[
 ['Их убил астероид',2],
 ['Из-за климата',2],
-['Ной не взял на ковчег',2],
-['Чтобы была нефть',1],
-['Не вымерли',1],
-['Скучно без людей',1]
+['Ной не взял на Ковчег',2],
+['Чтобы появилась нефть',1],
+['Они не вымерли (курицы = динозавры)',1],
+['Было скучно жить без людей',1]
 ]
 },
 
 {
-title:'×2',
-question:'Самое бесполезное изобретение?',
+title:'Двойная игра',
+question:'Какое самое бесполезное изобретение человечества?',
 multiplier:2,
 answers:[
 ['Ядерная бомба',2],
-['Крутилка микроволновки',2],
-['Сушилки для рук',2],
+['Крутилка на микроволновке',2],
+['Автоматические сушилки для рук',2],
 ['Эбола',1],
-['Шаблон стрелок',1],
+['Шаблон для рисования стрелок',1],
 ['Дорогие лимонады',1]
 ]
 },
 
 {
-title:'×3',
-question:'Зачем шерстка гусеницам?',
+title:'Тройная игра',
+question:'Зачем шерстка пушистым гусеницам?',
 multiplier:3,
 answers:[
 ['Чтобы не мерзли',2],
-['Чтобы ползти',2],
+['Чтобы ползти (цепляться)',2],
 ['Чтобы не ели птицы',2],
-['Классовое деление',1],
+['Классовое деление на бедных и богатых',1],
 ['Для красоты',1],
-['Где-то убыло',1]
+['Где-то убыло, где-то прибыло',1]
 ]
 },
 
 {
 title:'×4',
-question:'Какой звук поднимает ночью?',
+question:'Какой звук заставляет мгновенно вскочить среди ночи?',
 multiplier:4,
 answers:[
-['Кошачий блев',2],
+['Кошачий блев / кого-то тошнит',2],
 ['Храп',2],
-['Стук в дверь',2],
+['Стук в дверь или звук ключа в замке',2],
 ['Горн',1],
-['Смех сквозь сон',1],
-['Разбитое стекло',1]
+['Когда слышишь смех сквозь сон',1],
+['Звук разбитого стекла',1]
 ]
 },
 
 {
 title:'×5',
-question:'Странный комплимент?',
+question:'Самый странный комплимент, который звучит как оскорбление?',
 multiplier:5,
 answers:[
-['Ты слишком худой',2],
-['Не заморачиваешься',2],
-['Так лучше выглядишь',2],
-['Есть время на это',1],
-['Очень интересно',1],
-['Есть чувство юмора',1]
+['Ты слишком худая(ой)!',2],
+['Здорово, что ты не заморачиваешься!',2],
+['Ну ты, конечно, так получше выглядишь',2],
+['Круто, что у тебя есть свободное время на это',1],
+['Ничего не понятно, но очень интересно',1],
+['Оказывается, у тебя есть чувство юмора',1]
 ]
 },
 
 {
 title:'×10',
-question:'Что можно до сна и после пробуждения?',
+question:'Что можно делать за 5 минут до сна и сразу после пробуждения?',
 multiplier:10,
 answers:[
 ['Смотреть рилсы',2],
-['Гладить кошку',2],
+['Общаться с кошкой',2],
 ['Чистить зубы',2],
 ['Вязать',1],
-['Пописать',1],
-['Зевнуть',1]
+['Сидеть в туалете',1],
+['Зевать',1]
 ]
 },
 
 {
-title:'ФИНАЛ',
-question:'Ингредиент ко всему',
+title:'Финальный раунд',
+question:'Незаменимый ингредиент для любого блюда',
 multiplier:1,
 final:true,
 answers:[
@@ -550,8 +586,8 @@ answers:[
 ['Укроп',2],
 ['Сахар',2],
 ['Майонез',1],
-['Сушеный чеснок',1],
-['Специи карбонары',1]
+['Сушеный чеснок / копченая паприка',1],
+['Специи для карбонары',1]
 ]
 }
 
@@ -584,10 +620,9 @@ function errorSound(){ tone(120,700,'sawtooth'); }
 function switchSound(){ tone(500,180,'square'); }
 function stopSound(){ tone(80,1000,'square'); }
 
-function winSound(){
-tone(523,180);
-setTimeout(()=>tone(659,180),180);
-setTimeout(()=>tone(784,300),360);
+function startGame(){
+document.getElementById('startScreen').style.display='none';
+switchSound();
 }
 
 function setActiveTeam(team){
@@ -604,9 +639,7 @@ document.getElementById('team2cross'+i).classList.remove('active');
 }
 
 function getPoints(value){
-
 const r = rounds[round];
-
 let pts = value;
 
 if(r.reverse){
@@ -628,9 +661,7 @@ opened.push(i);
 
 if(!stopped){
 
-const pts = getPoints(
-rounds[round].answers[i][1]
-);
+const pts = getPoints(rounds[round].answers[i][1]);
 
 if(activeTeam === 1){
 score1 += pts;
@@ -643,9 +674,7 @@ score2 += pts;
 }
 
 revealSound();
-
 render();
-
 checkVictory();
 
 }
@@ -655,7 +684,6 @@ function mistake(){
 if(activeTeam === 0) return;
 
 mistakes++;
-
 errorSound();
 
 document.getElementById(
@@ -683,9 +711,7 @@ render();
 function stopRound(){
 
 stopped = true;
-
 activeTeam = 0;
-
 mistakes = 0;
 
 clearCrosses();
@@ -734,16 +760,15 @@ setTimeout(showWinner,1000);
 
 function showWinner(){
 
-winSound();
-
-const name1 =
-document.querySelectorAll('.teamName')[0].value;
-
-const name2 =
-document.querySelectorAll('.teamName')[1].value;
+tone(523,180);
+setTimeout(()=>tone(659,180),180);
+setTimeout(()=>tone(784,180),360);
+setTimeout(()=>tone(1046,420),540);
 
 const winner =
-score1 > score2 ? name1 : name2;
+score1 > score2
+? document.querySelectorAll('.teamName')[0].value
+: document.querySelectorAll('.teamName')[1].value;
 
 document.body.innerHTML = `
 <div class="winnerScreen">
@@ -760,6 +785,24 @@ ${winner}
 ${Math.max(score1,score2)} очков
 </div>
 
+<button
+onclick="location.reload()"
+style="
+margin-top:40px;
+border:none;
+border-radius:20px;
+padding:20px 38px;
+font-size:30px;
+font-weight:900;
+cursor:pointer;
+background:linear-gradient(180deg,#ffb347,#ff7b00);
+color:white;
+box-shadow:0 8px 20px rgba(0,0,0,.4);
+"
+>
+ИГРАТЬ ЕЩЁ РАЗ!
+</button>
+
 </div>
 `;
 
@@ -770,28 +813,17 @@ function render(){
 const data = rounds[round];
 
 document.getElementById(
+'roundNumber'
+).innerText =
+'Раунд ' + (round+1) + ' / ' + rounds.length;
+
+document.getElementById(
 'roundTitle'
 ).innerText = data.title;
 
 document.getElementById(
 'question'
 ).innerText = data.question;
-
-let mode = '';
-
-if(data.reverse){
-mode = '<div class="mode reverse">ИГРА НАОБОРОТ</div>';
-}
-else if(data.final){
-mode = '<div class="mode final">ФИНАЛ</div>';
-}
-else if(data.multiplier > 1){
-mode = '<div class="mode double">×'+data.multiplier+'</div>';
-}
-
-document.getElementById(
-'mode'
-).innerHTML = mode;
 
 document.getElementById(
 'score1'
@@ -835,7 +867,7 @@ ${i+1}
 </div>
 
 <div class="answerText">
-${opened.includes(i)?a[0]:'████████████'}
+${opened.includes(i)?a[0]:'████████████████'}
 </div>
 
 <div class="answerPoints">
