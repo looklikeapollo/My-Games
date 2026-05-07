@@ -773,11 +773,13 @@ return pts;
 function openAnswer(i){
 
 if(opened.includes(i)) return;
+
 if(activeTeam === 0 && !stopped) return;
 
 opened.push(i);
 
 const pts = getPoints(rounds[round].answers[i][1]);
+
 roundPoints += pts;
 
 if(!stopped){
@@ -787,6 +789,14 @@ if(stealMode){
 if(!stealAttemptUsed){
 
 stealAttemptUsed = true;
+
+if(firstTeam === 1){
+score1 -= (roundPoints - pts);
+}
+
+if(firstTeam === 2){
+score2 -= (roundPoints - pts);
+}
 
 if(activeTeam === 1){
 score1 += roundPoints;
@@ -823,8 +833,11 @@ score2 += pts;
 }
 
 revealSound();
+
 render();
+
 checkVictory();
+
 }
 
 function mistake(){
