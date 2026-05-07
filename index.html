@@ -1,60 +1,170 @@
 <!DOCTYPE html>
-  },700);
- }
-}
 
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 к 1</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#2d53d6,#101b4a 70%);color:#fff}
+.container{max-width:1500px;margin:auto;padding:12px}
+.top{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:12px;align-items:start;margin-bottom:12px}
+.team{background:linear-gradient(180deg,#2f63ff,#17318c);border:4px solid #ffd34d;border-radius:20px;padding:14px;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+.team.active{border-color:#fff;transform:scale(1.02)}
+.team input{width:100%;background:transparent;border:none;outline:none;text-align:center;font-size:30px;font-weight:900;color:white}
+.score{text-align:center;font-size:90px;font-weight:900;color:#ffd34d;line-height:1;margin:10px 0}
+.turnBtn{width:100%;padding:14px;border:none;border-radius:16px;font-size:22px;font-weight:bold;cursor:pointer;background:linear-gradient(180deg,#ffb100,#ff7a00);color:white}
+.center{text-align:center}
+.title{font-size:72px;font-weight:900;text-shadow:0 5px 15px rgba(0,0,0,.4)}
+.round{font-size:28px;font-weight:bold;color:#ffd34d;margin-top:8px}
+.reverse{display:inline-block;margin-top:10px;padding:10px 18px;background:#d62828;border-radius:30px;font-weight:bold}
+.question{background:linear-gradient(180deg,#2f63ff,#17318c);border:4px solid #ffd34d;border-radius:24px;padding:18px;font-size:34px;font-weight:900;text-align:center;margin-bottom:12px;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.answer{background:linear-gradient(180deg,#2554db,#132f84);border:4px solid #ffe28d;border-radius:18px;padding:16px;min-height:84px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s;font-size:28px;font-weight:bold}
+.answer:hover{transform:scale(1.01)}
+.answer.open{background:linear-gradient(180deg,#ffb100,#ff7a00)}
+.answerIndex{width:42px;font-size:34px;font-weight:900}
+.answerText{flex:1;padding:0 10px}
+.answerPoints{font-size:42px;font-weight:900;color:#fff1a8}
+.bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.panel{background:linear-gradient(180deg,#2f63ff,#17318c);border:4px solid #ffd34d;border-radius:20px;padding:16px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+.panel h2{margin-top:0;font-size:28px}
+.crosses{font-size:80px;letter-spacing:10px;margin:10px 0}
+.cross{color:#6d2222}.cross.active{color:#ff3b3b}
+.bigPoints{font-size:120px;font-weight:900;color:#ffd34d;line-height:1}
+.btn{width:100%;margin-top:10px;padding:16px;border:none;border-radius:16px;font-size:24px;font-weight:bold;cursor:pointer;color:white}
+.red{background:#d62828}.orange{background:linear-gradient(180deg,#ffb100,#ff7a00)}.dark{background:#27345f}
+@media(max-width:1100px){.top,.bottom,.answers{grid-template-columns:1fr}.title{font-size:42px}.question{font-size:24px}.answer{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="top">
+<div class="team" id="team1Card">
+<input value="Команда 1">
+<div class="score" id="score1">0</div>
+<button class="turnBtn" onclick="setActiveTeam(1)">Переход хода</button>
+</div>
+<div class="center">
+<div class="title">100 к 1</div>
+<div class="round" id="roundTitle"></div>
+<div id="reverseWrap"></div>
+</div>
+<div class="team" id="team2Card">
+<input value="Команда 2">
+<div class="score" id="score2">0</div>
+<button class="turnBtn" onclick="setActiveTeam(2)">Переход хода</button>
+</div>
+</div>
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
+<div class="bottom">
+<div class="panel">
+<h2>Ошибки</h2>
+<div class="crosses">
+<span class="cross" id="cross1">✕</span>
+<span class="cross" id="cross2">✕</span>
+<span class="cross" id="cross3">✕</span>
+</div>
+<button class="btn red" onclick="mistake()">Проверить</button>
+</div>
+<div class="panel">
+<h2>Очки</h2>
+<div class="bigPoints" id="points">0</div>
+</div>
+<div class="panel">
+<button class="btn orange" onclick="nextRound()">Следующий раунд</button>
+<button class="btn dark" onclick="resetRound()">Сбросить раунд</button>
+</div>
+</div>
+</div>
+<script>
+const rounds=[
+{title:'Раунд 1',question:'Что мужчины обычно делают одной рукой?',answers:[['Чешутся',2],['Гладят кошку',2],['Козырек, чтобы смотреть вдаль',2],['Чистят зубы',1],['Несут несколько предметов',1],['Ковыряют в носу',1]]},
+{title:'Раунд 2',question:'Что кладут в холодильник, а потом забывают на год?',answers:[['Капуста',2],['Соус',2],['Кисломолочка, купленная женой',2],['Замороженные ягоды',1],['Кабачок',1],['Остатки от роллов',1]]},
+{title:'Игра наоборот',reverse:true,question:'Что можно сделать за 5 минут до сна и через 5 минут после пробуждения?',answers:[['Смотреть рилсы',2],['Общаться с кошкой',2],['Чистить зубы',2],['Вязать',1],['Пописать',1],['Зевнуть',1]]}
+];
+let round=0;
+let opened=[];
+let mistakesCount=0;
+let activeTeam=0;
+let score1=0;
+let score2=0;
+function playTone(freq,duration,type='sine'){
+const ctx=new(window.AudioContext||window.webkitAudioContext)();
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
+osc.type=type;
+osc.frequency.value=freq;
+osc.connect(gain);
+gain.connect(ctx.destination);
+gain.gain.setValueAtTime(0.25,ctx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+duration/1000);
+osc.start();
+osc.stop(ctx.currentTime+duration/1000);
+}
+function revealSound(){playTone(850,180,'triangle')}
+function errorSound(){playTone(120,650,'sawtooth')}
+function switchSound(){playTone(500,200,'square')}
+function setActiveTeam(team){activeTeam=team;switchSound();render()}
+function currentPoints(){
+let total=0;
+for(const i of opened){total+=rounds[round].answers[i][1]}
+return total;
+}
+function openAnswer(i){
+if(opened.includes(i))return;
+opened.push(i);
+const pts=rounds[round].answers[i][1];
+if(activeTeam===1){score1+=pts}
+if(activeTeam===2){score2+=pts}
+revealSound();
+render();
+}
+function mistake(){
+mistakesCount++;
+errorSound();
+if(mistakesCount<=3){document.getElementById('cross'+mistakesCount).classList.add('active')}
+if(mistakesCount>=3){
+setTimeout(()=>{
+activeTeam=activeTeam===1?2:1;
+mistakesCount=0;
+for(let i=1;i<=3;i++){document.getElementById('cross'+i).classList.remove('active')}
+render();
+},700)
+}
+}
 function resetRound(){
- opened = [];
- mistakesCount = 0;
-
- for(let i=1;i<=3;i++){
-  document.getElementById('cross'+i).classList.remove('active');
- }
-
- render();
+opened=[];
+mistakesCount=0;
+for(let i=1;i<=3;i++){document.getElementById('cross'+i).classList.remove('active')}
+render();
 }
-
 function nextRound(){
- if(round < rounds.length - 1){
-  round++;
-  resetRound();
-  switchSound();
- }
+if(round<rounds.length-1){
+round++;
+resetRound();
+switchSound();
 }
-
+}
 function render(){
- const data = rounds[round];
-
- document.getElementById('question').innerText = data.question;
- document.getElementById('roundTitle').innerText = data.title;
-
- document.getElementById('reverseWrap').innerHTML = data.reverse
- ? '<div class="reverse">Очки наоборот</div>'
- : '';
-
- document.getElementById('score1').innerText = score1;
- document.getElementById('score2').innerText = score2;
- document.getElementById('points').innerText = currentPoints();
-
- document.getElementById('team1Card').classList.toggle('active',activeTeam===1);
- document.getElementById('team2Card').classList.toggle('active',activeTeam===2);
-
- const answersEl = document.getElementById('answers');
- answersEl.innerHTML = '';
-
- data.answers.forEach((a,i)=>{
-  answersEl.innerHTML += `
-   <div class="answer ${opened.includes(i)?'open':''}" onclick="openAnswer(${i})">
-    <div class="answerIndex">${i+1}</div>
-    <div class="answerText">${opened.includes(i)?a[0]:'████████████'}</div>
-    <div class="answerPoints">${opened.includes(i)?a[1]:''}</div>
-   </div>
-  `;
- });
+const data=rounds[round];
+document.getElementById('question').innerText=data.question;
+document.getElementById('roundTitle').innerText=data.title;
+document.getElementById('reverseWrap').innerHTML=data.reverse?'<div class="reverse">Очки наоборот</div>':'';
+document.getElementById('score1').innerText=score1;
+document.getElementById('score2').innerText=score2;
+document.getElementById('points').innerText=currentPoints();
+document.getElementById('team1Card').classList.toggle('active',activeTeam===1);
+document.getElementById('team2Card').classList.toggle('active',activeTeam===2);
+const answersEl=document.getElementById('answers');
+answersEl.innerHTML='';
+data.answers.forEach((a,i)=>{
+answersEl.innerHTML+=`<div class="answer ${opened.includes(i)?'open':''}" onclick="openAnswer(${i})"><div class="answerIndex">${i+1}</div><div class="answerText">${opened.includes(i)?a[0]:'████████████'}</div><div class="answerPoints">${opened.includes(i)?a[1]:''}</div></div>`;
+});
 }
-
 render();
 </script>
-
 </body>
 </html>
