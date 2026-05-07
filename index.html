@@ -1,580 +1,74 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>100 к 1</title>
-
-<style>
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#0d1330;
-color:white;
-overflow:hidden;
-}
-
-.wrapper{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:16px;
-}
-
-.board{
-width:100%;
-max-width:1700px;
-display:grid;
-grid-template-columns:280px 1fr 280px;
-gap:16px;
-}
-
-.side{
-border-radius:30px;
-padding:18px;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:space-between;
-box-shadow:
-inset 0 0 20px rgba(255,255,255,.15),
-0 0 30px rgba(0,0,0,.5);
-}
-
-.left{
-background:linear-gradient(180deg,#35b6ff,#0067a8);
-}
-
-.right{
-background:linear-gradient(180deg,#ff8646,#bf3c00);
-}
-
-.teamName{
-width:100%;
-background:#111;
-border-radius:18px;
-border:4px solid rgba(255,255,255,.2);
-padding:14px;
-font-size:34px;
-font-weight:900;
-text-align:center;
-color:white;
-outline:none;
-}
-
-.score{
-font-size:120px;
-font-weight:900;
-line-height:1;
-margin:10px 0;
-text-shadow:0 0 20px rgba(255,255,255,.4);
-}
-
-.crosses{
-display:flex;
-flex-direction:column;
-gap:12px;
-margin:20px 0;
-}
-
-.cross{
-width:95px;
-height:95px;
-border-radius:50%;
-background:radial-gradient(circle at top,#fff67b,#ffbf00);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:70px;
-font-weight:900;
-color:#d51919;
-opacity:.25;
-border:5px solid rgba(255,255,255,.4);
-box-shadow:
-inset 0 0 10px rgba(255,255,255,.6),
-0 0 20px rgba(0,0,0,.5);
-transition:.2s;
-}
-
-.cross.active{
-opacity:1;
-transform:scale(1.08);
-}
-
-.turnBtn{
-width:100%;
-border:none;
-border-radius:18px;
-padding:18px;
-font-size:28px;
-font-weight:900;
-cursor:pointer;
-color:white;
-background:linear-gradient(180deg,#ff7f3a,#d53c00);
-box-shadow:
-inset 0 0 10px rgba(255,255,255,.4),
-0 6px 15px rgba(0,0,0,.4);
-}
-
-.center{
-background:
-linear-gradient(90deg,#2fb3ff 0 50%,#f26b2d 50% 100%);
-border-radius:30px;
-padding:18px;
-box-shadow:
-inset 0 0 20px rgba(255,255,255,.1),
-0 0 30px rgba(0,0,0,.5);
-}
-
-.logo{
-background:#091022;
-border-radius:24px;
-padding:18px;
-text-align:center;
-font-size:78px;
-font-weight:900;
-color:#ffd43c;
-margin-bottom:18px;
-text-shadow:0 0 18px rgba(255,212,60,.5);
-border:4px solid rgba(255,255,255,.15);
-}
-
-.answers{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.answer{
-background:#05070f;
-border-radius:16px;
-border:4px solid rgba(255,255,255,.15);
-min-height:90px;
-display:grid;
-grid-template-columns:80px 1fr 90px;
-align-items:center;
-padding:0 20px;
-cursor:pointer;
-transition:.2s;
-box-shadow:
-inset 0 0 10px rgba(255,255,255,.05),
-0 0 10px rgba(0,0,0,.5);
-}
-
-.answer:hover{
-transform:scale(1.01);
-}
-
-.answer.open{
-background:linear-gradient(180deg,#0c1329,#101d42);
-border-color:#ffd43c;
-}
-
-.answerIndex{
-font-size:44px;
-font-weight:900;
-text-align:center;
-}
-
-.answerText{
-font-size:42px;
-font-weight:900;
-padding:0 10px;
-}
-
-.answerPoints{
-font-size:48px;
-font-weight:900;
-text-align:right;
-color:#ffd43c;
-}
-
-.controls{
-margin-top:18px;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:12px;
-}
-
-.btn{
-border:none;
-border-radius:18px;
-padding:18px;
-font-size:28px;
-font-weight:900;
-cursor:pointer;
-color:white;
-box-shadow:
-inset 0 0 10px rgba(255,255,255,.35),
-0 6px 15px rgba(0,0,0,.4);
-}
-
-.red{
-background:linear-gradient(180deg,#ff5252,#ba0000);
-}
-
-.orange{
-background:linear-gradient(180deg,#ffb347,#ff7b00);
-}
-
-.dark{
-background:linear-gradient(180deg,#41538f,#1b274f);
-}
-
-.teamActive{
-box-shadow:
-0 0 30px rgba(255,255,255,.35),
-inset 0 0 20px rgba(255,255,255,.2);
-}
-
-@media(max-width:1400px){
-
-.board{
-grid-template-columns:1fr;
-}
-
-body{
-overflow:auto;
-}
-
-.logo{
-font-size:52px;
-}
-
-.answerText{
-font-size:28px;
-}
-
-.answer{
-grid-template-columns:60px 1fr 70px;
-}
-
-}
-
+.mode{margin-top:8px;display:inline-block;padding:8px 14px;border-radius:20px;font-weight:900;font-size:22px}
+.reverse{background:#d62828}.double{background:#ff8800}.final{background:#ffd43c;color:#111}
+.answers{display:flex;flex-direction:column;gap:8px;flex:1}
+.answer{background:#05070f;border-radius:14px;border:3px solid rgba(255,255,255,.15);flex:1;display:grid;grid-template-columns:60px 1fr 70px;align-items:center;padding:0 14px;cursor:pointer;transition:.2s;min-height:0}
+.answer.locked{opacity:.55;cursor:not-allowed}
+.answer.open{background:linear-gradient(180deg,#0c1329,#101d42);border-color:#ffd43c}
+.answerIndex{font-size:30px;font-weight:900;text-align:center}
+.answerText{font-size:30px;font-weight:900;padding:0 8px;line-height:1.05}.answerPoints{font-size:34px;font-weight:900;text-align:right;color:#ffd43c}
+.controls{margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{border:none;border-radius:14px;padding:14px;font-size:20px;font-weight:900;cursor:pointer;color:white}.red{background:linear-gradient(180deg,#ff5252,#ba0000)}.orange{background:linear-gradient(180deg,#ffb347,#ff7b00)}.dark{background:linear-gradient(180deg,#41538f,#1b274f)}
+@media(max-width:1200px){body{overflow:auto}.wrapper{height:auto}.board{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
-
 <div class="wrapper">
-
 <div class="board">
-
 <div class="side left" id="team1Card">
-
 <input class="teamName" value="Команда 1">
-
 <div class="score" id="score1">0</div>
-
 <div class="crosses">
 <div class="cross" id="team1cross1">✕</div>
 <div class="cross" id="team1cross2">✕</div>
 <div class="cross" id="team1cross3">✕</div>
 </div>
-
-<button class="turnBtn" onclick="setActiveTeam(1)">
-ПЕРЕХОД ХОДА
-</button>
-
+<button class="turnBtn" onclick="setActiveTeam(1)">ПЕРЕХОД ХОДА</button>
 </div>
-
 <div class="center">
-
-<div class="logo">
-100 к 1
+<div class="topInfo">
+<div class="roundTitle" id="roundTitle"></div>
+<div class="question" id="question"></div>
+<div id="mode"></div>
 </div>
-
 <div class="answers" id="answers"></div>
-
 <div class="controls">
-
-<button class="btn red" onclick="mistake()">
-ПРОВЕРИТЬ
-</button>
-
-<button class="btn orange" onclick="nextRound()">
-СЛЕДУЮЩИЙ РАУНД
-</button>
-
-<button class="btn dark" onclick="resetRound()">
-СБРОС
-</button>
-
+<button class="btn red" onclick="mistake()">ПРОВЕРИТЬ</button>
+<button class="btn orange" onclick="nextRound()">СЛЕДУЮЩИЙ</button>
+<button class="btn dark" onclick="stopRound()">СТОП</button>
 </div>
-
 </div>
-
 <div class="side right" id="team2Card">
-
 <input class="teamName" value="Команда 2">
-
 <div class="score" id="score2">0</div>
-
 <div class="crosses">
 <div class="cross" id="team2cross1">✕</div>
 <div class="cross" id="team2cross2">✕</div>
 <div class="cross" id="team2cross3">✕</div>
 </div>
-
-<button class="turnBtn" onclick="setActiveTeam(2)">
-ПЕРЕХОД ХОДА
-</button>
-
+<button class="turnBtn" onclick="setActiveTeam(2)">ПЕРЕХОД ХОДА</button>
 </div>
-
 </div>
-
 </div>
-
 <script>
-
-const rounds = [
-
-{
-answers:[
-['Чешутся',2],
-['Гладят кошку',2],
-['Козырек, чтобы смотреть вдаль',2],
-['Чистят зубы',1],
-['Несут несколько предметов',1],
-['Ковыряют в носу',1]
-]
-},
-
-{
-answers:[
-['Капуста',2],
-['Соус',2],
-['Кисломолочка, купленная женой',2],
-['Замороженные ягоды',1],
-['Кабачок',1],
-['Остатки от роллов',1]
-]
-}
-
-];
-
-let round = 0;
-let opened = [];
-let mistakesCount = 0;
-let activeTeam = 0;
-let score1 = 0;
-let score2 = 0;
-
-function playTone(freq,duration,type='sine'){
-
-const ctx = new(window.AudioContext || window.webkitAudioContext)();
-
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-
-osc.type = type;
-osc.frequency.value = freq;
-
-osc.connect(gain);
-gain.connect(ctx.destination);
-
-gain.gain.setValueAtTime(0.25,ctx.currentTime);
-
-gain.gain.exponentialRampToValueAtTime(
-0.001,
-ctx.currentTime + duration/1000
-);
-
-osc.start();
-osc.stop(ctx.currentTime + duration/1000);
-
-}
-
-function revealSound(){
-playTone(900,180,'triangle');
-}
-
-function errorSound(){
-playTone(120,700,'sawtooth');
-}
-
-function switchSound(){
-playTone(500,180,'square');
-}
-
-function setActiveTeam(team){
-
-activeTeam = team;
-
-switchSound();
-
+const rounds=[{title:'Раунд 1',question:'Что мужчины обычно делают одной рукой?',multiplier:1,answers:[['Чешутся',2],['Гладят кошку',2],['Козырек, чтобы смотреть вдаль',2],['Чистят зубы',1],['Несут несколько предметов',1],['Ковыряют в носу',1]]},{title:'Раунд 2',question:'Что кладут в холодильник, а потом забывают на год?',multiplier:1,answers:[['Капуста',2],['Соус',2],['Кисломолочка, купленная женой',2],['Замороженные ягоды',1],['Кабачок',1],['Остатки от роллов',1]]},{title:'Раунд 3',question:'Что можно делать за 5 минут до выхода из дома?',multiplier:1,answers:[['Пойти в туалет',2],['Искать что-то',2],['Гладить кошку',2],['Думать что надеть',1],['Надевать обувь',1],['Ждать выхода',1]]},{title:'Раунд 4',question:'Самая зажатая мышца?',multiplier:1,answers:[['Шея',2],['Мозг',2],['Копчик',2],['На лбу',1],['Ягодицы',1],['Пальцы',1]]},{title:'Раунд 5',question:'Утро портится, если это закончилось',multiplier:1,answers:[['Кофе',2],['Молоко',2],['Вода',2],['Туалетная бумага',1],['Деньги',1],['Кошачий корм',1]]},{title:'ИГРА НАОБОРОТ',question:'Почему вымерли динозавры?',reverse:true,multiplier:1,answers:[['Астероид',2],['Из-за климата',2],['Ной не взял на ковчег',2],['Нефть',1],['Не вымерли',1],['Скучно без людей',1]]},{title:'ДВОЙНАЯ ИГРА',question:'Самое бесполезное изобретение?',multiplier:2,answers:[['Ядерная бомба',2],['Крутилка микроволновки',2],['Сушилки для рук',2],['Эбола',1],['Шаблон стрелок',1],['Дорогие лимонады',1]]},{title:'ДВОЙНАЯ ИГРА',question:'Зачем шерстка гусеницам?',multiplier:2,answers:[['Чтобы не мерзли',2],['Чтобы ползти',2],['Чтобы не ели птицы',2],['Классовое деление',1],['Для красоты',1],['Где-то убыло',1]]},{title:'ТРОЙНАЯ ИГРА',question:'Какой звук поднимает ночью?',multiplier:3,answers:[['Кошачий блев',2],['Храп',2],['Стук в дверь',2],['Горн',1],['Смех сквозь сон',1],['Разбитое стекло',1]]},{title:'×4',question:'Странный комплимент?',multiplier:4,answers:[['Ты слишком худой',2],['Не заморачиваешься',2],['Так лучше выглядишь',2],['Есть время на это',1],['Очень интересно',1],['Есть чувство юмора',1]]},{title:'×5',question:'Что можно до сна и после пробуждения?',multiplier:5,answers:[['Смотреть рилсы',2],['Гладить кошку',2],['Чистить зубы',2],['Вязать',1],['Пописать',1],['Зевнуть',1]]},{title:'ФИНАЛ',question:'Ингредиент ко всему',multiplier:10,final:true,answers:[['Соль',2],['Укроп',2],['Сахар',2],['Майонез',1],['Чеснок',1],['Специи карбонары',1]]}];
+let round=0,opened=[],activeTeam=0,mistakes=0,score1=0,score2=0,stopped=false;
+function tone(freq,duration,type='sine'){const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type=type;osc.frequency.value=freq;osc.connect(gain);gain.connect(ctx.destination);gain.gain.setValueAtTime(.25,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration/1000);osc.start();osc.stop(ctx.currentTime+duration/1000)}
+const revealSound=()=>tone(900,180,'triangle');
+const errorSound=()=>tone(120,700,'sawtooth');
+const switchSound=()=>tone(500,180,'square');
+const stopSound=()=>tone(80,1000,'square');
+function setActiveTeam(team){activeTeam=team;switchSound();render()}
+function clearCrosses(){for(let i=1;i<=3;i++){document.getElementById('team1cross'+i).classList.remove('active');document.getElementById('team2cross'+i).classList.remove('active')}}
+function getPoints(value){const r=rounds[round];let pts=r.reverse?(value===2?1:2):value;return pts*r.multiplier}
+function openAnswer(i){if(activeTeam===0||opened.includes(i))return;opened.push(i);if(!stopped){const pts=getPoints(rounds[round].answers[i][1]);if(activeTeam===1)score1+=pts;if(activeTeam===2)score2+=pts;}revealSound();render();checkVictory()}
+function mistake(){if(activeTeam===0)return;mistakes++;errorSound();document.getElementById('team'+activeTeam+'cross'+mistakes).classList.add('active');if(mistakes>=3){setTimeout(()=>{activeTeam=activeTeam===1?2:1;mistakes=0;clearCrosses();render()},700)}}
+function stopRound(){stopped=true;activeTeam=0;mistakes=0;clearCrosses();stopSound();render()}
+function nextRound(){if(round<rounds.length-1){round++;opened=[];mistakes=0;activeTeam=0;stopped=false;clearCrosses();switchSound();render()}else showWinner()}
+function checkVictory(){if(opened.length===rounds[round].answers.length&&round===rounds.length-1){setTimeout(showWinner,1000)}}
+function showWinner(){tone(523,180);setTimeout(()=>tone(659,180),180);setTimeout(()=>tone(784,300),360);const name1=document.querySelectorAll('.teamName')[0].value;const name2=document.querySelectorAll('.teamName')[1].value;const winner=score1>score2?name1:name2;document.body.innerHTML=`<div style="width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#2746b5,#0d1330);font-family:Arial;text-align:center;color:white"><div style="font-size:80px;font-weight:900;color:#ffd43c">🏆 ПОБЕДА 🏆</div><div style="font-size:72px;font-weight:900;margin-top:20px">${winner}</div><div style="font-size:48px;color:#ffd43c;margin-top:12px">${Math.max(score1,score2)} очков</div></div>`}
+function render(){const data=rounds[round];document.getElementById('roundTitle').innerText=data.title;document.getElementById('question').innerText=data.question;let mode='';if(data.reverse)mode='<div class="mode reverse">ИГРА НАОБОРОТ</div>';else if(data.final)mode='<div class="mode final">ФИНАЛ ×10</div>';else if(data.multiplier>1)mode=`<div class="mode double">×${data.multiplier}</div>`;document.getElementById('mode').innerHTML=mode;document.getElementById('score1').innerText=score1;document.getElementById('score2').innerText=score2;document.getElementById('team1Card').classList.toggle('teamActive',activeTeam===1);document.getElementById('team2Card').classList.toggle('teamActive',activeTeam===2);const answers=document.getElementById('answers');answers.innerHTML='';data.answers.forEach((a,i)=>{answers.innerHTML+=`<div class="answer ${(opened.includes(i)?'open':'')} ${(activeTeam===0?'locked':'')}" onclick="openAnswer(${i})"><div class="answerIndex">${i+1}</div><div class="answerText">${opened.includes(i)?a[0]:'████████████'}</div><div class="answerPoints">${opened.includes(i)?getPoints(a[1]):''}</div></div>`})}
 render();
-
-}
-
-function openAnswer(i){
-
-if(opened.includes(i)) return;
-
-opened.push(i);
-
-const pts = rounds[round].answers[i][1];
-
-if(activeTeam === 1){
-score1 += pts;
-}
-
-if(activeTeam === 2){
-score2 += pts;
-}
-
-revealSound();
-
-render();
-
-}
-
-function clearCrosses(){
-
-for(let i=1;i<=3;i++){
-
-document.getElementById(
-'team1cross'+i
-).classList.remove('active');
-
-document.getElementById(
-'team2cross'+i
-).classList.remove('active');
-
-}
-
-}
-
-function mistake(){
-
-mistakesCount++;
-
-errorSound();
-
-if(activeTeam === 1){
-
-document.getElementById(
-'team1cross'+mistakesCount
-).classList.add('active');
-
-}
-
-if(activeTeam === 2){
-
-document.getElementById(
-'team2cross'+mistakesCount
-).classList.add('active');
-
-}
-
-if(mistakesCount >= 3){
-
-setTimeout(()=>{
-
-activeTeam = activeTeam === 1 ? 2 : 1;
-
-mistakesCount = 0;
-
-clearCrosses();
-
-render();
-
-},700);
-
-}
-
-}
-
-function resetRound(){
-
-opened = [];
-
-mistakesCount = 0;
-
-clearCrosses();
-
-render();
-
-}
-
-function nextRound(){
-
-if(round < rounds.length - 1){
-
-round++;
-
-resetRound();
-
-switchSound();
-
-}
-
-}
-
-function render(){
-
-document.getElementById(
-'score1'
-).innerText = score1;
-
-document.getElementById(
-'score2'
-).innerText = score2;
-
-document.getElementById(
-'team1Card'
-).classList.toggle(
-'teamActive',
-activeTeam === 1
-);
-
-document.getElementById(
-'team2Card'
-).classList.toggle(
-'teamActive',
-activeTeam === 2
-);
-
-const answersEl = document.getElementById(
-'answers'
-);
-
-answersEl.innerHTML = '';
-
-rounds[round].answers.forEach((a,i)=>{
-
-answersEl.innerHTML += `
-<div class="answer ${opened.includes(i)?'open':''}" onclick="openAnswer(${i})">
-
-<div class="answerIndex">
-${i+1}
-</div>
-
-<div class="answerText">
-${opened.includes(i)?a[0]:'████████████'}
-</div>
-
-<div class="answerPoints">
-${opened.includes(i)?a[1]:''}
-</div>
-
-</div>
-`;
-
-});
-
-}
-
-render();
-
 </script>
-
 </body>
 </html>
